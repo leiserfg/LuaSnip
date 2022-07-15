@@ -158,12 +158,12 @@ local function eager_vars(pos)
     return vars
 end
 
-local builtin_ns = {}
+local builtin_ns = { SELECT = true }
 
 for name, _ in pairs(lazy_vars) do
     local parts = vim.split(name, "_")
     if #parts > 1 then
-        builtin_ns[parts[1]] = true
+        builtin_ns[ parts[1] ] = true
     end
 end
 

@@ -62,11 +62,15 @@ function Environ:new(pos, o)
            end
         end
 
+        local prefix = ""
+        if ns_name ~= "" then
+            prefix = ns_name .. "_"
+        end
+
         for name, val in pairs(eager_vars) do
-            if ns_name ~= "" then
-                name = ns_name .. "_" .. name
-            end
-            if val and type(val) ~= "string" and not Environ.is_table(name) then
+            name = prefix .. name
+            local val_type = type(val)
+            if val and val_type ~= "string" and val_type ~= "table" then
                 val = tostring(val)
             end
             rawset(o, name, val)
@@ -84,7 +88,7 @@ function Environ.env_namespace(name, namespace)
 
     assert(ns and type(ns) == 'table', ("Your namespace '%s' has to be a table"):format(name))
     assert(ns.init or ns.vars,( "Your namespace '%s' needs init or vars"):format(name))
-    assert(not namespace.eager and ns.vars, ("Your namespace %s can't set a `eager` fild without the `vars` one"):format(name))
+    assert(not namespace.eager and ns.vars, ("Your namespace %s can't set a `eager` field without the `vars` one"):format(name))
 
     ns.eager = ns.eager or {}
 
