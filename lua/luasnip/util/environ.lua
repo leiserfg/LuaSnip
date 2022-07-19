@@ -1,4 +1,4 @@
-local builtin_vars = require("luasnip.util._builtin_vars")
+local builtin_namespace = require("luasnip.util._builtin_vars")
 
 
 
@@ -15,12 +15,6 @@ local function tbl_to_lazy_env(tbl)
 end
 
 local namespaces = {
-    [""] = {
-        init = builtin_vars.eager,
-        vars = tbl_to_lazy_env(builtin_vars.lazy),
-        eager = {},
-        is_table = builtin_vars.is_table
-    }
 }
 
 -- Namespaces allow users to define their own environmet variables
@@ -81,11 +75,10 @@ function Environ:new(pos, o)
     return o
 end
 
-local builtin_ns_names = vim.inspect(vim.tbl_keys(builtin_vars.builtin_ns))
+local builtin_ns_names = vim.inspect(vim.tbl_keys(builtin_namespace.builtin_ns))
 
-function Environ.env_namespace(name, opts)
-    assert(#name > 0 and not (name:find("_")), ("You can't create a namespace with name '%s' empty nor containing _"):format(name))
-    assert(not builtin_vars.builtin_ns[name], ("You can't create a namespace with name '%s' because is one one of %s"):format(name, builtin_ns_names))
+
+local function _env_namespace(name, opts)
 
     assert(opts and type(opts) == 'table', ("Your namespace '%s' has to be a table"):format(name))
     assert(opts.init or opts.vars,( "Your namespace '%s' needs init or vars"):format(name))
@@ -126,6 +119,18 @@ function Environ.env_namespace(name, opts)
 
     namespaces[name] = opts
 end
+
+_env_namespace("", builtin_namespace)
+
+
+-- The exposed api checks for the names to avoid accidental overrides
+function Environ.env_namespace(name, opts)
+    assert(#name > 0 and not (name:find("_")), ("You can't create a namespace with name '%s' empty nor containing _"):format(name))
+    assert(not builtin_namespace.builtin_ns[name], ("You can't create a namespace with name '%s' because is one one of %s"):format(name, builtin_ns_names))
+
+    _env_namespace(name, opts)
+end
+
 
 function Environ:__index(key)
 
