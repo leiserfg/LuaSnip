@@ -8,9 +8,9 @@ local session = require("luasnip.session")
 local function I(pos, static_text, opts)
 	static_text = util.wrap_value(static_text) or { "" }
 
-        if #static_text == 0 then
-            static_text = { "" }
-        end
+	if #static_text == 0 then
+		static_text = { "" }
+	end
 
 	if pos == 0 then
 		return ExitNode:new({
