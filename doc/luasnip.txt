@@ -1,4 +1,4 @@
-*luasnip.txt*            For NVIM v0.5.0           Last change: 2022 August 30
+*luasnip.txt*          For NVIM v0.5.0          Last change: 2022 September 02
 
 ==============================================================================
 Table of Contents                                  *luasnip-table-of-contents*
@@ -1376,9 +1376,11 @@ where:
         Is a function that receives a string and returns a value for the var with that name
         or a table from var name to a value
         (in this case, if the value is a function it will be executed lazily once per snippet expansion).
-    - `init`: `fn(pos: pair[int])->map[string, EnvVal]` Takes the 0-based position of the cursor and returns
+    - `init`: `fn(meta: pair[int])->map[string, EnvVal]` Returns
         a table of variables that will set to the environment of the snippet on expansion,
         use this for vars that have to be calculated in that moment or that depend on each other.
+        The `meta` argument contains the 0 based position of the cursor when expanding in `meta[1]` and `meta[2]`,
+        and more snippet data as keys (till now `trigger` and `captures`).
     - `eager`: `list[string]` names of variables that will be taken from `vars` and appended eagerly (like those in init)
     - `multiline_vars`: `(fn(name:string)->bool)|map[sting, bool]|bool|string[]` Says if certain vars are a table or just a string,
         can be a function that get’s the name of the var and returns true if the var is a key,
