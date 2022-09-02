@@ -147,15 +147,20 @@ function lazy_vars.BLOCK_COMMENT_END()
 end
 
 -- These are the vars that have to be populated once the snippet starts to avoid any issue
-local function eager_vars(pos)
+local function eager_vars(meta)
 	local vars = {}
 	vars.TM_CURRENT_LINE =
-		vim.api.nvim_buf_get_lines(0, pos[1], pos[1] + 1, false)[1]
-	vars.TM_CURRENT_WORD = util.word_under_cursor(pos, vars.TM_CURRENT_LINE)
-	vars.TM_LINE_INDEX = tostring(pos[1])
-	vars.TM_LINE_NUMBER = tostring(pos[1] + 1)
+		vim.api.nvim_buf_get_lines(0, meta[1], meta[1] + 1, false)[1]
+	vars.TM_CURRENT_WORD = util.word_under_cursor(meta, vars.TM_CURRENT_LINE)
+	vars.TM_LINE_INDEX = tostring(meta[1])
+	vars.TM_LINE_NUMBER = tostring(meta[1] + 1)
 	vars.SELECT_RAW, vars.SELECT_DEDENT, vars.TM_SELECTED_TEXT =
 		util.get_selection()
+
+	for i, cap in ipairs(meta.captures) do
+		vars["_CAP" .. i] = cap
+	end
+	vars._TRIG = meta.trigger
 	return vars
 end
 

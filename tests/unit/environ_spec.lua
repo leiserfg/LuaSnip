@@ -10,7 +10,7 @@ describe("luasnip.util.environ", function()
 					local Environ = require("luasnip.util.environ")
                                         %s
 
-                                        local env = Environ:new({0, 0})
+                                        local env = Environ:new({0, 0, captures={}, trigger=""})
                                         local result = env["%s"]
                                         return #(result) > 0
                                         ]=]):format(
@@ -30,7 +30,7 @@ describe("luasnip.util.environ", function()
 					local Environ = require("luasnip.util.environ")
                                         %s
 
-                                        local env = Environ:new({0, 0})
+                                        local env = Environ:new({0, 0, captures={}, trigger=""})
                                         return env["%s"]
                                         ]=]):format(
 						namespace_setup,
@@ -48,7 +48,7 @@ describe("luasnip.util.environ", function()
 					([=[
 					local Environ = require("luasnip.util.environ")
                                         %s
-                                        local env = Environ:new({0, 0})
+                                        local env = Environ:new({0, 0, captures={}, trigger=""})
                                         return env["%s"] == nil
                                         ]=]):format(
 						namespace_setup,
@@ -71,7 +71,7 @@ describe("luasnip.util.environ", function()
 					([=[
 					local Environ = require("luasnip.util.environ")
                                         %s
-                                        local env = Environ:new({0, 0})
+                                        local env = Environ:new({0, 0, captures={}, trigger=""})
                                         return rawget(env, "%s") ~= nil
                                         ]=]):format(
 						namespace_setup,

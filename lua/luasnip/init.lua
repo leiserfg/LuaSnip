@@ -191,7 +191,12 @@ local function snip_expand(snippet, opts)
 	snip.trigger = opts.expand_params.trigger or snip.trigger
 	snip.captures = opts.expand_params.captures or {}
 
-	local env = Environ:new(opts.pos)
+	-- We merge the pos list so we don't break the old api and old eager variables keep working the same way
+	local meta = vim.list_extend(
+		{ trigger = snip.trigger, captures = snip.captures },
+		opts.pos
+	)
+	local env = Environ:new(meta)
 
 	local pos_id = vim.api.nvim_buf_set_extmark(
 		0,

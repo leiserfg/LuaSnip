@@ -39,14 +39,14 @@ function Environ.is_table(var_fullname)
 	return nmsp.is_table(varname)
 end
 
-function Environ:new(pos, o)
+function Environ:new(meta, o)
 	o = o or {}
 	setmetatable(o, self)
 
 	for ns_name, ns in pairs(namespaces) do
 		local eager_vars = {}
 		if ns.init then
-			eager_vars = ns.init(pos)
+			eager_vars = ns.init(meta)
 		end
 		for _, eager in ipairs(ns.eager) do
 			if not eager_vars[eager] then
@@ -134,9 +134,9 @@ _env_namespace("", builtin_namespace)
 function Environ.env_namespace(name, opts)
 	assert(
 		name:match("^[a-zA-Z][a-zA-Z0-9]*$"),
-		("You can't create a namespace with name '%s' it has to contain only and at least a non alpha-numeric character"):format(
-			name
-		)
+		(
+			"You can't create a namespace with name '%s' it has to contain only and at least a non alpha-numeric character"
+		):format(name)
 	)
 	assert(
 		not builtin_namespace.builtin_ns[name],
